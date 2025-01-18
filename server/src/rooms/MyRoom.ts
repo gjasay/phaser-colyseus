@@ -7,11 +7,7 @@ export class MyRoom extends Room<PongRoomState> {
   onCreate (options: any) {
     this.setState(new PongRoomState());
 
-    this.onMessage("type", (client, message) => {
-      //
-      // handle "type" message
-      //
-    });
+
   }
 
   onJoin (client: Client, options: any) {
