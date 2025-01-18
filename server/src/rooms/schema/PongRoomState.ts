@@ -7,6 +7,7 @@ export class Vector2Schema extends Schema {
 
 export class PlayerSchema extends Schema {
   @type("string") sessionId: string;
+  @type("number") id: number; // 1 or 2
   @type(Vector2Schema) position: Vector2Schema = new Vector2Schema();
   @type(Vector2Schema) size: Vector2Schema = new Vector2Schema();
 }
