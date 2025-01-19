@@ -1,15 +1,18 @@
 import { Room, Client, Delayed } from "@colyseus/core";
-import { PongRoomState, Vector2Schema } from "./schema/PongRoomState";
+import { PongRoomState } from "./schema/PongRoomState";
 import { handleInput } from "./messages/HandleInput";
-import { InputMessage } from "../types/messages";
+import { InputMessage } from "./types";
 import { initializePlayer } from "./InitializePlayer";
+import { Puck } from "./Puck";
 
 export class MyRoom extends Room<PongRoomState> {
   public maxClients = 2;
   private countdownInterval: Delayed;
+  private puck: Puck;
 
-  onCreate(options: any) {
+  onCreate(_options: any) {
     this.setState(new PongRoomState());
+    this.puck = new Puck(this);
 
     this.onMessage("input", (client, input: InputMessage) =>
       handleInput(this, client, input),
@@ -53,5 +56,6 @@ export class MyRoom extends Room<PongRoomState> {
 
   start() {
     console.log("Game started!");
+    this.puck.startMoving();
   }
 }

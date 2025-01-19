@@ -1,5 +1,5 @@
 import { Client } from "colyseus";
-import { InputMessage } from "../../types/messages";
+import { InputMessage } from "../types";
 import { GameUtils } from "../utils/GameUtils";
 import { MyRoom } from "../MyRoom";
 
