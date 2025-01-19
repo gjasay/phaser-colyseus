@@ -1,6 +1,6 @@
 import { Client } from "colyseus";
 import { MyRoom } from "./MyRoom";
-import { PlayerSchema, Vector2Schema } from "./schema/PongRoomState";
+import { PlayerSchema } from "./schema/PongRoomState";
 
 export const initializePlayer = (room: MyRoom, client: Client) => {
   let player: PlayerSchema;

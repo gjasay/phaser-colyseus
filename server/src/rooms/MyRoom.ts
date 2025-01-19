@@ -40,7 +40,7 @@ export class MyRoom extends Room<PongRoomState> {
   }
 
   startCountdown() {
-    this.state.countdown = 5;
+    this.state.countdown = 3;
 
     this.countdownInterval = this.clock.setInterval(() => {
       this.state.countdown--;

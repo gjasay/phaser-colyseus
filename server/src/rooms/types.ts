@@ -1,8 +1,18 @@
-import { Vector2Schema } from "./schema/PongRoomState";
+export interface IEntity {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
-export interface Entity {
-  position: Vector2Schema;
-  size: Vector2Schema;
+export interface IPaddleSide {
+  left: boolean;
+  right: boolean;
+}
+
+export interface IVector2 {
+  x: number;
+  y: number;
 }
 
 export interface InputMessage {
