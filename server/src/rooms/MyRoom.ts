@@ -1,4 +1,4 @@
-import { Room, Client } from "@colyseus/core";
+import { Room, Client, Delayed } from "@colyseus/core";
 import { PongRoomState, Vector2Schema } from "./schema/PongRoomState";
 import { handleInput } from "./messages/HandleInput";
 import { InputMessage } from "../types/messages";
@@ -6,6 +6,7 @@ import { initializePlayer } from "./InitializePlayer";
 
 export class MyRoom extends Room<PongRoomState> {
   public maxClients = 2;
+  private countdownInterval: Delayed;
 
   onCreate(options: any) {
     this.setState(new PongRoomState());
@@ -20,8 +21,8 @@ export class MyRoom extends Room<PongRoomState> {
     client.send("playerId", this.clients.length);
     console.log("playerId set:", this.clients.length);
 
-    if (this.clients.length === 1) {
-      this.initialize();
+    if (this.clients.length === 2) {
+      this.startCountdown();
     }
 
     initializePlayer(this, client);
@@ -35,16 +36,22 @@ export class MyRoom extends Room<PongRoomState> {
     console.log("room", this.roomId, "disposing...");
   }
 
-  initialize() {
-    console.log("Initializing game...");
-    this.state.playerOne.position = new Vector2Schema(0, -90);
-    this.state.playerTwo.position = new Vector2Schema(0, 90);
-    this.state.playerOne.size = new Vector2Schema(20, 5);
-    this.state.playerTwo.size = new Vector2Schema(20, 5);
-    this.state.puck.position = new Vector2Schema(0, 0);
+  startCountdown() {
+    this.state.countdown = 5;
+
+    this.countdownInterval = this.clock.setInterval(() => {
+      this.state.countdown--;
+
+      console.log(this.state.countdown);
+
+      if (this.state.countdown === 0) {
+        this.countdownInterval.clear();
+        this.start();
+      }
+    }, 1000);
   }
 
   start() {
-    
+    console.log("Game started!");
   }
 }

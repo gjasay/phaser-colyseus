@@ -15,12 +15,18 @@ export class PlayerSchema extends Schema {
   @type("string") sessionId: string;
   @type("int8") score: number = 0;
   @type(Vector2Schema) position: Vector2Schema = new Vector2Schema();
-  @type(Vector2Schema) size: Vector2Schema = new Vector2Schema();
+  @type(Vector2Schema) size: Vector2Schema = new Vector2Schema(30, 8);
+
+  constructor(position: Vector2Schema = new Vector2Schema())
+  {
+    super();
+    this.position = position;
+  }
 }
 
 export class PuckSchema extends Schema {
-  @type(Vector2Schema) position: Vector2Schema = new Vector2Schema();
-  @type(Vector2Schema) size: Vector2Schema = new Vector2Schema();
+  @type(Vector2Schema) position: Vector2Schema = new Vector2Schema(0, 0);
+  @type(Vector2Schema) size: Vector2Schema = new Vector2Schema(5, 5);
 }
 
 export class GameAreaSchema extends Schema {
@@ -29,10 +35,10 @@ export class GameAreaSchema extends Schema {
 }
 
 export class PongRoomState extends Schema {
-  @type(PlayerSchema) playerOne: PlayerSchema = new PlayerSchema();
-  @type(PlayerSchema) playerTwo: PlayerSchema = new PlayerSchema();
+  @type(PlayerSchema) playerOne: PlayerSchema = new PlayerSchema(new Vector2Schema(-30, -90));
+  @type(PlayerSchema) playerTwo: PlayerSchema = new PlayerSchema(new Vector2Schema(-30, 90));
   @type(GameAreaSchema) gameArea: GameAreaSchema = new GameAreaSchema();
   @type(PuckSchema) puck: PuckSchema = new PuckSchema();
-  @type("float32") startTimer: number = -1;
+  @type("int8") countdown: number = 5;
   @type("int8") winner: number = -1;
 }
