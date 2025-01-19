@@ -13,7 +13,7 @@ export class Vector2Schema extends Schema {
 
 export class PlayerSchema extends Schema {
   @type("string") sessionId: string;
-  @type("number") score: number = 0;
+  @type("int8") score: number = 0;
   @type(Vector2Schema) position: Vector2Schema = new Vector2Schema();
   @type(Vector2Schema) size: Vector2Schema = new Vector2Schema();
 }
@@ -33,5 +33,6 @@ export class PongRoomState extends Schema {
   @type(PlayerSchema) playerTwo: PlayerSchema = new PlayerSchema();
   @type(GameAreaSchema) gameArea: GameAreaSchema = new GameAreaSchema();
   @type(PuckSchema) puck: PuckSchema = new PuckSchema();
-  @type("number") winner: number = -1;
+  @type("float32") startTimer: number = -1;
+  @type("int8") winner: number = -1;
 }

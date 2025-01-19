@@ -43,4 +43,8 @@ export class MyRoom extends Room<PongRoomState> {
     this.state.playerTwo.size = new Vector2Schema(20, 5);
     this.state.puck.position = new Vector2Schema(0, 0);
   }
+
+  start() {
+    
+  }
 }
