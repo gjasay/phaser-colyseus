@@ -14,7 +14,6 @@ export default config({
          * Define your room handlers:
          */
         gameServer.define('pong_room', MyRoom);
-
     },
 
     initializeExpress: (app) => {

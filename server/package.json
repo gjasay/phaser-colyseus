@@ -8,7 +8,9 @@
     "node": ">= 16.13.0"
   },
   "scripts": {
-    "start": "tsx watch src/index.ts",
+    "start:server": "tsx watch src/index.ts",
+    "start:visualizer": "cd visualizer && bun dev",
+    "start": "concurrently \"bun run start:visualizer\" \"bun run start:server\" ",
     "loadtest": "tsx loadtest/example.ts --room my_room --numClients 2",
     "build": "npm run clean && tsc",
     "clean": "rimraf build",

@@ -1,6 +1,10 @@
 import { MyRoom } from "../MyRoom";
-import { PlayerSchema, PongRoomState } from "../schema/PongRoomState";
-import { IEntity, IPaddleSide, IVector2 } from "../types";
+import {
+  EntitySchema,
+  PlayerSchema,
+  PongRoomState,
+} from "../schema/PongRoomState";
+import { IPaddleSide, IVector2 } from "../types";
 
 export class GameUtils {
   public static getPlayer(room: MyRoom, sessionId: string): PlayerSchema {
@@ -22,17 +26,20 @@ export class GameUtils {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  public static checkCollision(puck: IEntity, paddle: IEntity): IPaddleSide {
+  public static checkCollision(
+    puck: EntitySchema,
+    paddle: EntitySchema,
+  ): IPaddleSide {
     const paddleSide: IPaddleSide = { left: false, right: false };
 
     const puckPos: IVector2 = this.getTopLeftPosition(puck);
     const paddlePos: IVector2 = this.getTopLeftPosition(paddle);
 
     if (
-      puckPos.x < paddlePos.x + paddle.width &&
-      puckPos.x + puck.width > paddlePos.x &&
-      puckPos.y < paddlePos.y + paddle.height &&
-      puckPos.y + puck.height > paddlePos.y
+      puckPos.x < paddlePos.x + paddle.width && // Puck is to the left of the right side of the paddle
+      paddlePos.x < puckPos.x + puck.width && // Paddle is the left of the right side of the puck
+      puckPos.y < paddlePos.y + paddle.height && // Puck is above the bottom of the paddle
+      paddlePos.y < puckPos.y + puck.height // Paddle is above the bottom of the puck
     ) {
       if (puckPos.x < paddlePos.x + paddle.width / 2) {
         paddleSide.left = true;
@@ -42,11 +49,11 @@ export class GameUtils {
       console.log(paddleSide);
     }
 
-
     return paddleSide;
   }
 
-  public static getTopLeftPosition(entity: IEntity): IVector2 {
+  public static getTopLeftPosition(entity: EntitySchema): IVector2 {
     return { x: entity.x - entity.width / 2, y: entity.y - entity.height / 2 };
   }
+
 }

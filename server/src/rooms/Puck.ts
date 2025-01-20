@@ -17,6 +17,7 @@ export class Puck {
   private _playerOne: PlayerSchema;
   private _playerTwo: PlayerSchema;
   private _movementInterval: Delayed;
+  private _speed: number = 2;
 
   private _direction: IDirection = {
     up: false,
@@ -42,35 +43,54 @@ export class Puck {
     this._playerTwo = room.state.playerTwo;
   }
 
-  startMoving() {
+  public startMoving() {
+    // Clear direction state
+    this._direction = { up: false, down: false, left: false, right: false };
+
+    // Randomize the direction of the serve
     if (GameUtils.getRandomInt(1, 2) === 1) {
       this._direction.up = true;
     } else {
       this._direction.down = true;
     }
 
+    // Reset puck position
     this._state.x = 100;
+    this._state.y = 100;
 
+    // Puck movement loop
     this._movementInterval = this._room.clock.setInterval(() => {
-      this._p1PaddleCollision = GameUtils.checkCollision(
-        this._state,
-        this._playerOne,
-      );
-      this._p2PaddleCollision = GameUtils.checkCollision(
-        this._state,
-        this._playerTwo,
-      );
+      const p1Pos = GameUtils.getTopLeftPosition(this._playerOne);
+      const p2Pos = GameUtils.getTopLeftPosition(this._playerTwo);
+
+      if (
+        this._state.y > p2Pos.y + this._playerTwo.height &&
+        this._state.y < p1Pos.y
+      ) {
+        this.detectPaddleCollision();
+      }
       this.move();
     }, 1000 / 60);
   }
 
-  stopMoving() {
+  public stopMoving() {
     if (!this._movementInterval?.active) return;
+    console.log("Puck stopped moving");
     this._movementInterval.clear();
   }
 
-  move() {
+  private detectPaddleCollision() {
+    this._p1PaddleCollision = GameUtils.checkCollision(
+      this._state,
+      this._playerOne,
+    );
+    this._p2PaddleCollision = GameUtils.checkCollision(
+      this._state,
+      this._playerTwo,
+    );
+  }
 
+  private move() {
     // Collision detection
     if (
       this._p1PaddleCollision.left ||
@@ -84,33 +104,35 @@ export class Puck {
       this._direction.right =
         this._p1PaddleCollision.right || this._p2PaddleCollision.right;
     }
-    
+
     // Y-axis movement
     if (this._direction.up) {
-      this._state.y -= 1;
-    } else if (
-      this._direction.down &&
-      this._state.y < this._room.state.gameArea.height
-    ) {
-      this._state.y += 1;
+      this._state.y -= this._speed;
+    } else if ( this._direction.down) {
+      this._state.y += this._speed;
     }
 
     if (this._state.y < 0) {
       this._room.state.playerOne.score += 1;
       this.stopMoving();
+      this.startMoving();
     } else if (this._state.y > this._room.state.gameArea.height) {
       this._room.state.playerTwo.score += 1;
       this.stopMoving();
-    }
-    
-    // X-axis movement
-    if (this._direction.right) {
-      this._state.x += 1;
-    } else if (this._direction.left) {
-      this._state.x -= 1;
+      this.startMoving();
     }
 
-    if (this._state.x - this._state.width / 2 < 0 || this._state.x + this._state.width / 2 > this._room.state.gameArea.width) {
+    // X-axis movement
+    if (this._direction.right) {
+      this._state.x += this._speed;
+    } else if (this._direction.left) {
+      this._state.x -= this._speed;
+    }
+
+    if (
+      this._state.x - this._state.width / 2 < 0 ||
+      this._state.x + this._state.width / 2 > this._room.state.gameArea.width
+    ) {
       this.flipXDirection();
     }
   }
