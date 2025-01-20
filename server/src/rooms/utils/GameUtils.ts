@@ -56,4 +56,14 @@ export class GameUtils {
     return { x: entity.x - entity.width / 2, y: entity.y - entity.height / 2 };
   }
 
+  public static startCountdown(room: MyRoom, seconds:number, callback: Function) {
+    room.state.countdown = seconds;
+    const countdownInterval = room.clock.setInterval(() => {
+      room.state.countdown--;
+      if (room.state.countdown === 0) {
+      countdownInterval.clear();
+      callback();
+      }
+    }, 1000);
+  }
 }

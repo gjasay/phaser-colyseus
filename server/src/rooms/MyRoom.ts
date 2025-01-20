@@ -4,10 +4,10 @@ import { handleInput } from "./messages/HandleInput";
 import { InputMessage } from "./types";
 import { initializePlayer } from "./InitializePlayer";
 import { Puck } from "./Puck";
+import { GameUtils } from "./utils/GameUtils";
 
 export class MyRoom extends Room<PongRoomState> {
-  public maxClients = 2;
-  private countdownInterval: Delayed;
+  public maxClients = 2
   private puck: Puck;
 
   onCreate(_options: any) {
@@ -25,7 +25,7 @@ export class MyRoom extends Room<PongRoomState> {
     console.log("playerId set:", this.clients.length);
 
     if (this.clients.length === 2) {
-      this.startCountdown();
+      GameUtils.startCountdown(this, 3, () => this.start());
     }
 
     initializePlayer(this, client);
@@ -37,21 +37,6 @@ export class MyRoom extends Room<PongRoomState> {
 
   onDispose() {
     console.log("room", this.roomId, "disposing...");
-  }
-
-  startCountdown() {
-    this.state.countdown = 3;
-
-    this.countdownInterval = this.clock.setInterval(() => {
-      this.state.countdown--;
-
-      console.log(this.state.countdown);
-
-      if (this.state.countdown === 0) {
-        this.countdownInterval.clear();
-        this.start();
-      }
-    }, 1000);
   }
 
   start() {

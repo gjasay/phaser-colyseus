@@ -17,7 +17,7 @@ export class Puck {
   private _playerOne: PlayerSchema;
   private _playerTwo: PlayerSchema;
   private _movementInterval: Delayed;
-  private _speed: number = 2;
+  private _speed: number = 3;
 
   private _direction: IDirection = {
     up: false,
@@ -115,11 +115,11 @@ export class Puck {
     if (this._state.y < 0) {
       this._room.state.playerOne.score += 1;
       this.stopMoving();
-      this.startMoving();
+      GameUtils.startCountdown(this._room, 3, () => this.startMoving());
     } else if (this._state.y > this._room.state.gameArea.height) {
       this._room.state.playerTwo.score += 1;
       this.stopMoving();
-      this.startMoving();
+      GameUtils.startCountdown(this._room, 3, () => this.startMoving());
     }
 
     // X-axis movement
